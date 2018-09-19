@@ -16,4 +16,16 @@
 >a2enmod  mpm_event<br>
 >a2enmod  proxy_fcgi setenvif<br>
 >a2enconf php7.3-fpm<br>
+
+>nano /etc/apache2/sites-available/your_vh.conf<br>
+
+    <VirtualHost *:880>
+        .........................
+        <FilesMatch \.php$>
+                # Apache 2.4.10+ can proxy to unix socket
+                #SetHandler "proxy:unix:/var/run/php/php5.6-fpm.sock|fcgi://localhost/"
+                SetHandler "proxy:unix:/var/run/php/php7.3-fpm.sock|fcgi://localhost/"
+        </FilesMatch>
+    </VirtualHost>
+
 >service apache2 restart<br>
