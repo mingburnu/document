@@ -1,6 +1,6 @@
->dd if=/dev/zero of=/swapfile bs=1024 count=512k<br>
->mkswap /swapfile<br>
->swapon /swapfile<br>
+>/bin/dd if=/dev/zero of=/var/swap.1 bs=1M count=1024<br>
+>/sbin/mkswap /var/swap.1<br>
+>/sbin/swapon /var/swap.1<br>
 
 >cd /var/www/laravel<br>
 >composer require barryvdh/laravel-ide-helper --dev<br>
