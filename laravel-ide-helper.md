@@ -8,10 +8,10 @@
 
 >vim config/app.php<br>
 
-    // laravel version < 5.5
     'providers' => [
     
             ..................................
+            // laravel version < 5.5
             Barryvdh\LaravelIdeHelper\IdeHelperServiceProvider::class,
     
             ..................................
