@@ -1,6 +1,6 @@
->echo 'deb http://ftp.de.debian.org/debian jessie main non-free' | tee -a /etc/apt/sources.list.d/sources.list<br>
->echo 'deb-src http://ftp.de.debian.org/debian jessie main non-free' | tee -a /etc/apt/sources.list.d/sources.list<br>
->wget -O /etc/apt/trusted.gpg.d/php.gpg https://packages.sury.org/php/apt.gpg<br>
+>apt-get install ca-certificates apt-transport-https<br>
+>wget -q https://packages.sury.org/php/apt.gpg -O- | apt-key add -<br>
+>echo "deb https://packages.sury.org/php/ jessie main" | tee /etc/apt/sources.list.d/php.list<br>
 >apt-get update<br>
 >apt-get install php7.3<br>
 >apt-get install php7.3-fpm php7.3-opcache php7.3-cgi<br>
