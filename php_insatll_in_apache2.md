@@ -18,6 +18,10 @@
 >a2enmod  proxy_fcgi setenvif<br>
 >a2enconf php7.3-fpm<br>
 
+>vim /etc/apache2/ports.conf
+
+    Listen 880
+
 >nano /etc/apache2/sites-available/your_vh.conf<br>
 
     <VirtualHost *:880>
