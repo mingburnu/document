@@ -4,4 +4,6 @@
 
 > /www/server/mysql/bin/mysqlbinlog /www/server/data/mysql-bin.000012 > /tmp/statement.sql
 
+> mysql -u root -p -e "source /tmp/statement.sql"
+
 > show binlog events limit 0,20
