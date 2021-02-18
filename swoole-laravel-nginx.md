@@ -8,3 +8,17 @@
 > php -i | grep php.ini<br>
 > echo "extension=swoole.so" >> /etc/php/7.4/cli/php.ini<br>
 > php -m | grep swoole<br>
+
+> composer create-project laravel/laravel /var/app
+
+> cd /var/app
+
+> composer require swooletw/laravel-swoole
+
+> php artisan vendor:publish --tag=laravel-swoole
+ 
+> php artisan swoole:http start
+ 
+### REFERENCE
+https://wiki.swoole.com<br>
+https://github.com/swooletw/laravel-swoole/wiki
