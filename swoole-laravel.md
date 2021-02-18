@@ -1,5 +1,6 @@
 > apt-get install php-cli php-gd php-mysql php-curl php-mbstring php-xml php-gmp php-zip php-imagick<br>
 > apt-get install php-pear php-dev<br>
+> apt-get install build-essential<br>
 > apt-get install gcc<br>
 > apt-get install make<br>
 > apt-get install autoconf<br>
