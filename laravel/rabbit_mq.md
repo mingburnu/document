@@ -1,22 +1,22 @@
->mv /var/lib/dpkg/info /var/lib/dpkg/info.bak<br>
->mkdir /var/lib/dpkg/info<br>
->apt-get update<br>
->apt upgrade<br>
->apt-get install erlang<br>
->echo 'deb http://www.rabbitmq.com/debian/ testing main' | tee /etc/apt/sources.list.d/rabbitmq.list<br>
->wget -O- https://www.rabbitmq.com/rabbitmq-release-signing-key.asc | apt-key add -<br>
->apt-get update<br>
->apt-get install rabbitmq-server<br>
->vim /etc/rabbitmq/rabbitmq.config<br>
+> mv /var/lib/dpkg/info /var/lib/dpkg/info.bak<br>
+> mkdir /var/lib/dpkg/info<br>
+> apt-get update<br>
+> apt upgrade<br>
+> apt-get install erlang<br>
+> echo 'deb http://www.rabbitmq.com/debian/ testing main' | tee /etc/apt/sources.list.d/rabbitmq.list<br>
+> wget -O- https://www.rabbitmq.com/rabbitmq-release-signing-key.asc | apt-key add -<br>
+> apt-get update<br>
+> apt-get install rabbitmq-server<br>
+> vim /etc/rabbitmq/rabbitmq.config<br>
 
     [
            {rabbit, [{loopback_users, []}]}
     ].
 
->systemctl restart rabbitmq-server<br>
->systemctl is-active rabbitmq-server<br>
->rabbitmq-plugins enable rabbitmq_management<br>
->composer require vladimir-yuldashev/laravel-queue-rabbitmq<br>
+> systemctl restart rabbitmq-server<br>
+> systemctl is-active rabbitmq-server<br>
+> rabbitmq-plugins enable rabbitmq_management<br>
+> composer require vladimir-yuldashev/laravel-queue-rabbitmq<br>
 
 edit config/app.php<br>
 
@@ -72,21 +72,79 @@ edit .env<br>
     RABBITMQ_PASSWORD=guest
     RABBITMQ_QUEUE=queue_name
 
->php artisan make:job QueueJob<br>
->php artisan make:controller QueueController<br>
+> php artisan make:job QueueJob<br>
+> php artisan make:controller QueueController<br>
 
-edit app/Jobs/QueueJob.php]<br>
+edit app/Jobs/QueueJob.php<br>
+
+```php
+<?php
+
+namespace App\Jobs;
+
+use App\Jobs\Job;
+use Illuminate\Queue\SerializesModels;
+use Illuminate\Queue\InteractsWithQueue;
+use Illuminate\Contracts\Queue\ShouldQueue;
+
+
+class QueueJob extends Job implements ShouldQueue
+{
+    use InteractsWithQueue, SerializesModels;
+    private $data;
+    /**
+     * Create a new job instance.
+     *
+     * @return void
+     */
+    public function __construct($data)
+    {
+        //
+        $data['date'] = date("Y-m-d H:i:s");
+        $this->data = $data;
+    }
+
+    /**
+     * Execute the job.
+     *
+     * @return void
+     */
+    public function handle()
+    {
+        echo json_encode($this->data);
+    }
+}
+```
+
 edit app/Http/Controllers/QueueController.php<br>
+
+```php
+<?php
+
+namespace App\Http\Controllers;
+
+use App\Http\Requests;
+use App\Jobs\QueueJob;
+
+class QueueController extends Controller
+{
+    public function queue() {
+        $time = time();
+        $this->dispatch(new QueueJob(compact('time')));
+    }
+}
+```
+
 edit routes/web.php<br>
 
     Route::get('/queue',['as'=>'queue.job','uses'=>'QueueController@queue']);
 
 [http://APP_URL/queue](http://APP_URL/queue)<br>
 [http://RABBITMQ_HOST:15672](http://RABBITMQ_HOST:15672)<br>
->php artisan queue:work rabbitmq --queue=processing,queue_name<br>
+> php artisan queue:work rabbitmq --queue=processing,queue_name<br>
 
 ### REFERECE
+
 [Queues](https://laravel.com/docs/5.4/queues)<br>
 [How to Install Erlang on Debian 9 & Debian 8](https://tecadmin.net/install-erlang-debian/)<br>
 [Debian/Ubuntu 安裝 RabbitMQ](https://andyyou.github.io/2017/09/07/rabbitmq-ubuntu/)<br>
-[laravel5 rabbitmq使用测试](https://www.phpsong.com/3163.html)<br>
