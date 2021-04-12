@@ -1,41 +1,41 @@
->apt-get update && apt-get upgrade<br>
->apt-get install software-properties-common<br>
->echo 'deb http://ftp.utexas.edu/dotdeb/ stable all' | tee /etc/apt/sources.list.d/dotdeb.list<br>
->echo 'deb-src http://ftp.utexas.edu/dotdeb/ stable all' | tee -a /etc/apt/sources.list.d/dotdeb.list<br>
->wget https://www.dotdeb.org/dotdeb.gpg<br>
->apt-key add dotdeb.gpg<br>
->apt-get update<br>
->apt-get install redis-server<br>
->vim /etc/redis/redis.conf<br>
+> apt-get update && apt-get upgrade<br>
+> apt-get install software-properties-common<br>
+> echo 'deb http://ftp.utexas.edu/dotdeb/ stable all' | tee /etc/apt/sources.list.d/dotdeb.list<br>
+> echo 'deb-src http://ftp.utexas.edu/dotdeb/ stable all' | tee -a /etc/apt/sources.list.d/dotdeb.list<br>
+> wget https://www.dotdeb.org/dotdeb.gpg<br>
+> apt-key add dotdeb.gpg<br>
+> apt-get update<br>
+> apt-get install redis-server<br>
+> vim /etc/redis/redis.conf<br>
 
     databases 16
     requirepass Passw0rd
     appendonly yes
 
->service redis-server restart<br>
->sysctl vm.overcommit_memory=1<br>
->echo 'vm.overcommit_memory = 1' | tee -a /etc/sysctl.conf<br>
->redis-server<br>
->redis-cli<br>
->auth Passw0rd<br>
->select 3
->ping<br>
->ping test<br>
->set 'a' 1<br>
->get 'a'<br>
->exit<br>
+> service redis-server restart<br>
+> sysctl vm.overcommit_memory=1<br>
+> echo 'vm.overcommit_memory = 1' | tee -a /etc/sysctl.conf<br>
+> redis-server<br>
+> redis-cli<br>
+> auth Passw0rd<br>
+> select 3
+> ping<br>
+> ping test<br>
+> set 'a' 1<br>
+> get 'a'<br>
+> exit<br>
 
->apt-get install curl<br>
->curl -sL https://deb.nodesource.com/setup_10.x -o nodesource_setup.sh<br>
->bash nodesource_setup.sh<br>
->apt-get install nodejs<br>
->rm nodesource_setup.sh<br>
->node -v<br>
+> apt-get install curl<br>
+> curl -sL https://deb.nodesource.com/setup_10.x -o nodesource_setup.sh<br>
+> bash nodesource_setup.sh<br>
+> apt-get install nodejs<br>
+> rm nodesource_setup.sh<br>
+> node -v<br>
 
->cd /var/www/laravel<br>
->composer require predis/predis<br>
->npm install express socket.io ioredis --save<br>
->npm install socket.io-client --save<br>
+> cd /var/www/laravel<br>
+> composer require predis/predis<br>
+> npm install express socket.io ioredis --save<br>
+> npm install socket.io-client --save<br>
 edit package.json<br>
 
     ...............  
@@ -53,7 +53,7 @@ edit package.json<br>
         .............
       }
 
->npm install<br>
+> npm install<br>
 
 edit .env<br>
 
@@ -70,17 +70,78 @@ edit config/database.php<br>
                 'database' => 0, // 0-15
             ],
 
->php artisan queue:listen<br>
+> php artisan queue:listen<br>
 
-edit  socket.js<br>
->node socket.js<br>
->php artisan make:event PushNotification<br>
+edit socket.js<br>
+
+            var Redis = require('ioredis');
+            var redis = new Redis();
+            
+            redis.subscribe('notification', function(err, count) {
+               console.log('connect!');
+            });
+            
+            redis.on('message', function(channel, notification) {
+               console.log(notification);
+            });`
+
+> node socket.js<br>
+> php artisan make:event PushNotification<br>
 
 edit app/Events/PushNotification.php<br>
+```php
+<?php
 
->php artisan tinker<br>
->event(new App\Events\PushNotification('Hello', 'World!'))<br>
->exit<br>
+namespace App\Events;
+
+use App\Events\Event;
+use App\User;
+use Illuminate\Queue\SerializesModels;
+use Illuminate\Contracts\Broadcasting\ShouldBroadcast;
+
+class PushNotification extends Event implements ShouldBroadcast
+{
+    use SerializesModels;
+
+    /**
+     * @var string
+     */
+    public $token;
+
+    /**
+     * @var string
+     */
+    public $message;
+
+
+    /**
+     * Create a new event instance.
+     *
+     * @param User $user
+     * @param      $message
+     */
+    public function __construct(User $user, $message)
+    {
+        $this->token = sha1($user->id . '|' . $user->email);
+        $this->message = $message;
+    }
+
+
+    /**
+     * Get the channels the event should be broadcast on.
+     *
+     * @return array
+     */
+    public function broadcastOn()
+    {
+        return ['notification'];
+    }
+}
+```
+
+> php artisan tinker<br>
+> event(new App\Events\PushNotification('Hello', 'World!'))<br>
+> exit<br>
 
 edit resources/assets/js/broadcast.js<br>
 
@@ -95,7 +156,7 @@ edit resources/assets/js/app.js<br>
 
     require('./broadcast');
 
->npm run dev<br>
+> npm run dev<br>
 
 edit app/Console/Kernel.php<br>
 
@@ -105,7 +166,7 @@ edit app/Console/Kernel.php<br>
                 }
             )->cron('* * * * *');
 
->vim /etc/crontab<br>
+> vim /etc/crontab<br>
 
     * * * * * root php /var/www/laravel/artisan schedule:run >> /dev/null 2>&1
 
@@ -131,9 +192,10 @@ edit routes/web.php<br>
 [http://APP_URL/broadcast](http://APP_URL/broadcast)
 
 ### Refernce
+
 [Broadcasting](https://laravel.com/docs/5.4/broadcasting)<br>
 [How To Install Node.js on Debian 8](https://www.digitalocean.com/community/tutorials/how-to-install-node-js-on-debian-8)<br>
 [How to Install a Redis Server on Ubuntu or Debian 8](https://www.linode.com/docs/databases/redis/how-to-install-a-redis-server-on-ubuntu-or-debian8/)<br>
 [Laravel 5.4 推播功能](https://hackmd.io/s/SknZva8jb)<br>
 [在 laravel 5 實作瀏覽器推播通知](https://jigsawye.com/2015/12/22/push-notification-to-user-in-laravel-5/)<br>
-[Laravel 5.4 Mix执行 npm run dev时报错](https://juejin.im/post/5a7b9e686fb9a0635a654f83)
+[Laravel 5.4 Mix执行 npm run dev时报错](https://juejin.im/post/5a7b9e686fb9a0635a654f83)<br>
