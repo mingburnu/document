@@ -36,7 +36,7 @@
 >composer require predis/predis<br>
 >npm install express socket.io ioredis --save<br>
 >npm install socket.io-client --save<br>
-[edit package.json](https://github.com/mingburnu/broadcast/blob/master/package.json)<br>
+edit package.json<br>
 
     ...............  
     "scripts": {
@@ -55,13 +55,13 @@
 
 >npm install<br>
 
-[edit .env](https://github.com/mingburnu/broadcast/blob/master/.env)<br>
+edit .env<br>
 
     BROADCAST_DRIVER=redis
     QUEUE_DRIVER=redis
     REDIS_PASSWORD=Passw0rd
 
-[edit config/database.php](https://github.com/mingburnu/broadcast/blob/master/config/database.php)
+edit config/database.php<br>
 
             'default' => [
                 'host' => env('REDIS_HOST', '127.0.0.1'),
@@ -72,17 +72,17 @@
 
 >php artisan queue:listen<br>
 
-[edit  socket.js](https://github.com/mingburnu/broadcast/blob/master/socket.js)<br>
+edit  socket.js<br>
 >node socket.js<br>
 >php artisan make:event PushNotification<br>
 
-[edit app/Events/PushNotification.php](https://github.com/mingburnu/broadcast/blob/master/app/Events/PushNotification.php)<br>
+edit app/Events/PushNotification.php<br>
 
 >php artisan tinker<br>
 >event(new App\Events\PushNotification('Hello', 'World!'))<br>
 >exit<br>
 
-[edit resources/assets/js/broadcast.js](https://github.com/mingburnu/broadcast/blob/master/resources/assets/js/broadcast.js)<br>
+edit resources/assets/js/broadcast.js<br>
 
     let io = require('socket.io-client');
     let notification = io.connect('http://192.168.1.133:3001');
@@ -91,13 +91,13 @@
         $('div').html(message);
     });
 
-[edit resources/assets/js/app.js](https://github.com/mingburnu/broadcast/blob/master/resources/assets/js/app.js)<br>
+edit resources/assets/js/app.js<br>
 
     require('./broadcast');
 
 >npm run dev<br>
 
-[edit app/Console/Kernel.php](https://github.com/mingburnu/broadcast/blob/master/app/Console/Kernel.php)
+edit app/Console/Kernel.php<br>
 
     $schedule->call(
                 function () {
@@ -109,7 +109,7 @@
 
     * * * * * root php /var/www/laravel/artisan schedule:run >> /dev/null 2>&1
 
-[edit resources/views/broadcast.blade.php](https://github.com/mingburnu/broadcast/blob/master/resources/views/broadcast.blade.php)<br>
+edit resources/views/broadcast.blade.php<br>
 
     <!DOCTYPE html>
     <html lang="en">
@@ -122,7 +122,7 @@
         </body>
     </html>
 
-[edit routes/web.php](https://github.com/mingburnu/broadcast/blob/master/routes/web.php)
+edit routes/web.php<br>
 
     Route::get('/broadcast', function () {
         return view('broadcast');
