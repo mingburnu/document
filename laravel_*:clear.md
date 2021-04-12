@@ -3,3 +3,5 @@
 >php artisan config:clear<br>
 >php artisan route:clear<br>
 >php artisan cache:clear<br>
+>php artisan event:clear
+>php artisan optimize:clear
