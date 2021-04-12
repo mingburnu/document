@@ -18,14 +18,14 @@
 >rabbitmq-plugins enable rabbitmq_management<br>
 >composer require vladimir-yuldashev/laravel-queue-rabbitmq<br>
 
-[edit config/app.php](https://github.com/mingburnu/MQ/blob/master/config/app.php)<br>
+edit config/app.php<br>
 
     'providers' => [
         .............
         VladimirYuldashev\LaravelQueueRabbitMQ\LaravelQueueRabbitMQServiceProvider::class,       
     ]
 
-[edit config/queue.php](https://github.com/mingburnu/MQ/blob/master/config/queue.php)<br>
+edit config/queue.php<br>
 
     'connections' => [
                 'rabbitmq' => [
@@ -63,7 +63,7 @@
         .................    
     ]
 
-[edit .env](https://github.com/mingburnu/MQ/blob/master/.env)<br>
+edit .env<br>
 
     RABBITMQ_HOST=127.0.0.1
     RABBITMQ_PORT=5672
@@ -75,9 +75,9 @@
 >php artisan make:job QueueJob<br>
 >php artisan make:controller QueueController<br>
 
-[edit app/Jobs/QueueJob.php](https://github.com/mingburnu/MQ/blob/master/app/Jobs/QueueJob.php)<br>
-[edit app/Http/Controllers/QueueController.php](https://github.com/mingburnu/MQ/blob/master/app/Http/Controllers/QueueController.php)<br>
-[edit routes/web.php](https://github.com/mingburnu/MQ/blob/master/routes/web.php)<br>
+edit app/Jobs/QueueJob.php]<br>
+edit app/Http/Controllers/QueueController.php<br>
+edit routes/web.php<br>
 
     Route::get('/queue',['as'=>'queue.job','uses'=>'QueueController@queue']);
 
