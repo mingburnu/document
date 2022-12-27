@@ -1,3 +1,4 @@
+
 ## Master Host
 > vim /etc/mysql/mysql.conf.d/mysqld.cnf
 
@@ -5,6 +6,11 @@
     bind-address = 0.0.0.0
     server-id = 1
     log-bin=mysql-bin
+
+> vim /var/lib/mysql/auto.cnf
+
+    [auto]
+    server-uuid=fe1719b2-5b3e-11ec-ba70-080027242c28 
 
 > service mysql restart
 
@@ -24,6 +30,11 @@
     [mysqld]    
     server-id=2    
     read-only=on
+
+> vim /var/lib/mysql/auto.cnf
+
+    [auto]
+    server-uuid=fe1719b2-5b3e-11ec-ba70-080027242c29 
 
 > service mysql restart
 
